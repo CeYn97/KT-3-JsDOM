@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       li.addEventListener("click", (event) => {
         event.stopPropagation();
-        alert(`Вы можете перейти по ссылке`);
+        alert("Вы можете перейти по ссылке");
       });
     }
 
@@ -63,11 +63,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.appendChild(menuContainer);
 
   document.querySelectorAll(".menu-item").forEach((item) => {
-    item.addEventListener("mouseover", () => {
-      item.classList.add("hover-darken");
-    });
-    item.addEventListener("mouseout", () => {
-      item.classList.remove("hover-darken");
+    item.addEventListener("mouseover", (event) => {
+      document.querySelectorAll(".menu-item").forEach((el) => {
+        el.classList.remove("hover-darken");
+      });
+      event.target.classList.add("hover-darken");
     });
   });
 });
