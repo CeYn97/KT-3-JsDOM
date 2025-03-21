@@ -1,78 +1,73 @@
-const menuDate = [
-  {
-    text: "Книги",
-    children: [
-      {
-        text: "Отечественные",
-        children: [
-          { text: "Классика", link: "#" },
-          { text: "Фантастика", link: "#" },
-          { text: "Исторические", link: "#" },
-        ],
-      },
-      {
-        text: "Зарубежные",
-        children: [
-          { text: "Классика", link: "#" },
-          { text: "Фантастика", link: "#" },
-          { text: "Исторические", link: "#" },
-        ],
-      },
-    ],
-  },
-  {
-    text: "DVD",
-    children: [
-      {
-        text: "Отечественные",
-        children: [
-          { text: "Классика", link: "#" },
-          { text: "Фантастика", link: "#" },
-          { text: "Исторические", link: "#" },
-        ],
-      },
-      {
-        text: "Зарубежные",
-        children: [
-          { text: "Классика", link: "#" },
-          { text: "Фантастика", link: "#" },
-          { text: "Исторические", link: "#" },
-        ],
-      },
-    ],
-  },
-];
+document.addEventListener("DOMContentLoaded", () => {
+  const data = [
+    {
+      name: "Книги",
+      children: [
+        { name: "Отечественные", children: [] },
+        {
+          name: "Зарубежные",
+          children: [
+            { name: "Детективы" },
+            { name: "Научная фантастика" },
+            { name: "Исторические" },
+          ],
+        },
+      ],
+    },
+    {
+      name: "DVD",
+      children: [
+        {
+          name: "Отечественные",
+          children: [
+            { name: "Детективы" },
+            { name: "Научная фантастика" },
+            { name: "Исторические" },
+          ],
+        },
+        { name: "Зарубежные", children: [] },
+      ],
+    },
+  ];
 
-function createMenuItems(item) {
-  const li = document.createElement("li");
-  const span = document.createElement("span");
-  span.textContent = item.text;
-  li.appendChild(span);
+  function createMenuItem(item) {
+    const li = document.createElement("li");
+    li.textContent = item.name;
+    li.classList.add("menu-item", "always-active");
 
-  if (item.link) {
-    const a = document.createElement("a");
-    a.href = item.link;
-    a.textContent = item.text;
-    a.addEventListener("click", (event) => {
-      event.stopPropagation();
-      alert("Вы можете перейти по этой ссылке!");
-    });
-    li.replaceChild(a, span);
+    if (item.children && item.children.length > 0) {
+      const ul = document.createElement("ul");
+      ul.classList.add("submenu");
+
+      item.children.forEach((child) => ul.appendChild(createMenuItem(child)));
+      li.appendChild(ul);
+
+      li.addEventListener("click", (event) => {
+        event.stopPropagation();
+        ul.classList.toggle("open");
+      });
+    } else {
+      li.addEventListener("click", (event) => {
+        event.stopPropagation();
+        alert(`Вы можете перейти по ссылке`);
+      });
+    }
+
+    return li;
   }
 
-  if (item.children) {
-    const ul = document.createElement("ul");
-    item.children.forEach((child) => ul.appendChild(createMenuItems(child)));
-    li.append(ul);
+  const menuContainer = document.createElement("ul");
+  menuContainer.classList.add("menu-container");
 
-    li.addEventListener("click", function (event) {
-      event.stopPropagation();
-      ul.style.display = ul.style.display === "none" ? "block" : "none";
+  data.forEach((item) => menuContainer.appendChild(createMenuItem(item)));
+  document.body.appendChild(menuContainer);
+
+  document.querySelectorAll(".menu-item").forEach((item) => {
+    item.addEventListener("mouseover", () => {
+      item.classList.add("hover-darken");
     });
-  }
-
-  return li;
-}
-
-const menu = document.getElementById("menu");
-menuDate.forEach((item) => menu.appendChild(createMenuItems(item)));
+    item.addEventListener("mouseout", () => {
+      item.classList.remove("hover-darken");
+    });
+  });
+});
